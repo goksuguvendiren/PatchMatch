@@ -15,10 +15,8 @@ int main()
     const Bitmap bm1(input1);
     const Bitmap bm2(input2);
 
-    NNF ann(bm1.width(), bm1.height());
-
     std::cerr << "Beginning PatchMatch\n";
-    PatchMatch(bm1, bm2, ann);
+    NNF ann = PatchMatch(bm1, bm2);
 
     std::cerr << "Ended\n";
     cv::Mat image = cv::Mat(bm2.height(), bm2.width(), CV_8UC3);
@@ -26,17 +24,17 @@ int main()
     for (int i = 0; i < bm1.height(); i++){  // height
         for (int j = 0; j < bm1.width(); j++){  // width
             auto nn = ann.field[i][j];
-            std::cerr << nn.x << " " << nn.y << " " << nn.distance << " --- ";
+//            std::cerr << nn.x << " " << nn.y << " " << nn.distance << " --- ";
             assert(nn.x >= 0);
             assert(nn.y >= 0);
             assert(nn.distance >= 0);
 
             image.at<cv::Vec3b>(nn.y, nn.x) = bm1.At(i, j);
         }
-        std::cerr << '\n';
+//        std::cerr << '\n';
     }
 
-    cv::imshow("asd", image);
+    cv::imshow("final", image);
     cv::waitKey(0);
 
     cv::imwrite("/Users/goksu/Documents/PatchMatch/image_computed.png", image);
